@@ -1,0 +1,24 @@
+name: Builder
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Docker Setup QEMU
+        uses: docker/setup-qemu-action@v1.0.1
+        with:
+          image: arm64v8/debian:buster
+          platforms: arm64
+
+      - name: Run build
+        run: echo $(arch)
