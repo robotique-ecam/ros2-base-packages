@@ -8,17 +8,35 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-aarch64:
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      
+    steps:      
       - name: Docker Setup QEMU
         uses: docker/setup-qemu-action@v1.0.1
         with:
-          image: arm64v8/debian:buster
           platforms: arm64
-
-      - name: Run build
-        run: echo $(arch)
+      
+      - name: Setup ROS cross compiler
+        run: |
+          sudo apt-get update && sudo apt-get install -y wget git python3-pip qemu-user-static
+          sudo -H pip3 install ros_cross_compile vcstool
+          mkdir -p ~/ros2_foxy/src
+          cd ~/ros2_foxy
+          wget https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
+          vcs import src < ros2.repos
+          
+      - name: Build ros2 foxy for aarch64
+        run: |
+          ros_cross_compile \
+          ~/ros2_foxy/ \
+          --arch aarch64 \
+          --os debian \
+          --rosdistro foxy \
+          --skip-rosdep-keys "console_bridge fastcdr fastrtps rti-connext-dds-5.3.1 urdfdom_headers"
+          
+      - name: Package and upload built base-packages
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: ~/ros2_foxy/install_aarch64
+          if-no-files-found: error
+          retention_days: 90
