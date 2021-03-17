@@ -10,6 +10,7 @@ on:
 jobs:
   build-aarch64:
     runs-on: ubuntu-latest
+    timeout-minutes: 900
     steps:      
       - name: Docker Setup QEMU
         uses: docker/setup-qemu-action@v1.0.1
@@ -26,6 +27,7 @@ jobs:
           vcs import src < ros2.repos
           
       - name: Build ros2 foxy for aarch64
+        timeout-minutes: 900
         run: |
           ros_cross_compile \
           ~/ros2_foxy/ \
