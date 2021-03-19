@@ -24,7 +24,10 @@ jobs:
           mkdir -p ~/ros2_foxy/src
           cd ~/ros2_foxy
           wget https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
+          #wget https://raw.githubusercontent.com/robotique-ecam/cdfr/master/ros_ws.repos
+          wget https://raw.githubusercontent.com/robotique-ecam/cdfr/3wnbr1/update-ros-ws-dependencies/ros_ws.repos
           vcs import src < ros2.repos
+          vcs import src < ros_ws.repos
           
       - name: Build ros2 foxy for aarch64
         timeout-minutes: 900
