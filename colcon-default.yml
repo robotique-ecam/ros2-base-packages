@@ -1,0 +1,6 @@
+build:
+  skip:
+    packages-skip:
+      - nav2_system_tests
+    packages-skip-by-dep:
+      - nav2_system_tests
