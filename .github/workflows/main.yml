@@ -37,7 +37,7 @@ jobs:
           --os debian \
           --rosdistro foxy \
           --colcon-defaults colcon-default.yml \
-          --skip-rosdep-keys "console_bridge fastcdr fastrtps gazebo_ros_pkgs rti-connext-dds-5.3.1 urdfdom_headers"
+          --skip-rosdep-keys "catkin console_bridge fastcdr fastrtps gazebo_ros_pkgs rti-connext-dds-5.3.1 urdfdom_headers"
           
       - name: Package and upload built base-packages
         uses: actions/upload-artifact@v2.2.2
