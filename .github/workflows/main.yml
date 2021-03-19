@@ -8,9 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  runs-on: self-hosted
   build-aarch64:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 900
     steps:      
       - name: Docker Setup QEMU
