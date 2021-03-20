@@ -20,6 +20,7 @@ jobs:
           sudo apt-get update && sudo apt-get install -y wget git python3-pip qemu-user-static
           sudo -H pip3 install ros_cross_compile vcstool
           mkdir -p ~/ros2_foxy/src
+          cp default.yaml ~/ros2_foxy
           cd ~/ros2_foxy
           wget https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
           wget https://raw.githubusercontent.com/robotique-ecam/cdfr/master/ros_ws.repos
@@ -34,7 +35,6 @@ jobs:
           --arch aarch64 \
           --os debian \
           --rosdistro foxy \
-          --colcon-defaults colcon-default.yml \
           --skip-rosdep-keys "catkin console_bridge fastcdr fastrtps gazebo_ros_pkgs libceres-dev rti-connext-dds-5.3.1 urdfdom_headers"
           
       - name: Package and upload built base-packages
