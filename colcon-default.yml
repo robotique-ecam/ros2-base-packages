@@ -1,4 +1,5 @@
 build:
+  merge-install: true
   skip:
     packages-skip:
       - nav2_system_tests
