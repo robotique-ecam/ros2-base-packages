@@ -3,8 +3,5 @@ build:
   cmake-args:
     - -DCMAKE_BUILD_TYPE=Release
     - -DBUILD_TESTING=OFF
-  skip:
-    packages-skip:
-      - nav2_system_tests
-    packages-skip-by-dep:
-      - nav2_system_tests
+  packages-skip:
+    - nav2_system_tests
