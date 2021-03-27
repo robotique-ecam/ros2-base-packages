@@ -40,9 +40,10 @@ jobs:
           --rosdistro foxy \
           --skip-rosdep-keys "catkin console_bridge fastcdr fastrtps gazebo_ros_pkgs libceres-dev rti-connext-dds-5.3.1 urdfdom_headers"
           
-      - name: Package and upload built base-packages
+      - name: Upload built packages
         uses: actions/upload-artifact@v2.2.2
         with:
-          name: ~/ros2_foxy/install_aarch64
+          name: ros2-foxy-debian-buster-aarch64
+          path: ~/ros2_foxy/install_aarch64/
           if-no-files-found: error
           retention_days: 90
