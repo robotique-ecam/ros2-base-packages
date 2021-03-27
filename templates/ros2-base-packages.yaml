@@ -10,5 +10,5 @@ description: Base ROS2 Foxy buster:aarch64 package inc navigation2 & TEB
 vendor: "Robotique-ECAM"
 license: "GPLv3"
 contents:
-- src: /Users/ewen/ros2_foxy/install_aarch64/
+- src: install_aarch64
   dst: /opt/ros/foxy
