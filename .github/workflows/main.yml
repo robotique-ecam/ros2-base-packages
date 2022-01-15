@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-aarch64:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     timeout-minutes: 900
     steps:
       - name: Checkout
@@ -20,52 +20,53 @@ jobs:
       
       - name: Setup ROS cross compiler
         run: |
-          sudo apt-get update && sudo apt-get install -y wget git python3-pip qemu-user-static
+          sudo apt-get update && sudo apt-get install -y wget git python3-pip \
+          qemu-user-static g++-aarch64-linux-gnu g++-arm-linux-gnueabihf pkg-config-aarch64-linux-gnu
           sudo -H pip3 install ros_cross_compile vcstool
-          mkdir -p ~/ros2_foxy/src
-          cp defaults.yaml ~/ros2_foxy
-          cd ~/ros2_foxy
-          wget https://raw.githubusercontent.com/ros2/ros2/foxy/ros2.repos
+          mkdir -p ~/ros2_galactic/src
+          cp defaults.yaml ~/ros2_galactic
+          cd ~/ros2_galactic
+          wget https://raw.githubusercontent.com/ros2/ros2/galactic/ros2.repos
           wget https://raw.githubusercontent.com/robotique-ecam/cdfr/master/ros_ws.repos
           vcs import src < ros2.repos
           vcs import src < ros_ws.repos
           
-      - name: Build ros2 foxy for aarch64
+      - name: Build ros2 galactic for aarch64
         timeout-minutes: 900
         run: |
           ros_cross_compile \
-          ~/ros2_foxy/ \
+          ~/ros2_galactic/ \
           --arch aarch64 \
           --os debian \
-          --rosdistro foxy \
+          --rosdistro galactic \
           --skip-rosdep-keys "catkin console_bridge fastcdr fastrtps gazebo_ros_pkgs libceres-dev rti-connext-dds-5.3.1 urdfdom_headers"
-          tar -czvf ros-foxy-buster-aarch64.tar.gz -C ~/ros2_foxy/install_aarch64/ .
+          tar -czvf ros-galactic-buster-aarch64.tar.gz -C ~/ros2_galactic/install_aarch64/ .
           
       - name: Upload built packages
         uses: actions/upload-artifact@v2.2.2
         with:
-          name: ros2-foxy-buster-aarch64
-          path: ros-foxy-buster-aarch64.tar.gz
+          name: ros2-galactic-buster-aarch64
+          path: ros-galactic-buster-aarch64.tar.gz
           if-no-files-found: error
           retention-days: 90
 
       - name: Check for dependencies
         run: |
           sudo apt install -y python3-yaml python3-requests
-          wget https://github.com/goreleaser/nfpm/releases/download/v2.3.1/nfpm_arm64.deb
+          wget https://github.com/goreleaser/nfpm/releases/download/v2.11.3/nfpm_arm64.deb
           sudo apt install -y ./nfpm_arm64.deb
 
       - name: Create deb package
         run: |
           python3 generate-deb.py
-          cd ~/ros2_foxy
+          cd ~/ros2_galactic
           cp $GITHUB_WORKSPACE/ros2-base-packages.yaml .
           nfpm pkg -p deb -f ros2-base-packages.yaml
 
       - name: Upload built packages
         uses: actions/upload-artifact@v2.2.2
         with:
-          name: ros2-foxy-debian-buster-aarch64
-          path: "~/ros2_foxy/*.deb"
+          name: ros2-galactic-debian-buster-aarch64
+          path: "~/ros2_galactic/*.deb"
           if-no-files-found: error
           retention-days: 90

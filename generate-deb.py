@@ -17,16 +17,18 @@ deb_dependencies = []
 
 
 def get_packages_xmls(path: str):
-    return Path(path).rglob('**/package.xml')
+    return Path(path).rglob("**/package.xml")
+
 
 def parse_packages_xmls(path: str):
     for xml in get_packages_xmls(path):
         tree = ET.parse(xml)
-        name = tree.find('name').text
+        name = tree.find("name").text
         run_depend = [e.text for e in tree.findall("run_depend")]
         depend = [e.text for e in tree.findall("depend")]
         exec_depend = [e.text for e in tree.findall("exec_depend")]
         packages.update({name: run_depend + depend + exec_depend})
+
 
 def fetch_rosdeps():
     """Fetch rosdeps from Github"""
@@ -36,6 +38,7 @@ def fetch_rosdeps():
     rosdeps = yaml.safe_load(get(base).text)
     rosdeps_python = yaml.safe_load(get(python).text)
 
+
 def resolve_dependencies(path):
     parse_packages_xmls(path)
     for p in packages:
@@ -43,13 +46,15 @@ def resolve_dependencies(path):
             if dep not in packages:
                 dependencies.add(dep)
 
+
 def getBusterPackageName(debian):
-    if 'buster' in debian and debian['buster'] is not None:
-        return debian['buster']
-    elif '*' in debian:
-        return debian['*']
+    if "buster" in debian and debian["buster"] is not None:
+        return debian["buster"]
+    elif "*" in debian:
+        return debian["*"]
     else:
         return debian
+
 
 def dependencies_for_debian(path):
     global deb_dependencies
@@ -57,24 +62,23 @@ def dependencies_for_debian(path):
     resolve_dependencies(path)
     for dep in dependencies:
         try:
-            deb_dependencies += getBusterPackageName(rosdeps[dep]['debian'])
+            deb_dependencies += getBusterPackageName(rosdeps[dep]["debian"])
         except KeyError:
             if dep in rosdeps_python:
-                deb_dependencies += getBusterPackageName(rosdeps_python[dep]['debian'])
+                deb_dependencies += getBusterPackageName(rosdeps_python[dep]["debian"])
             else:
-                print(f'No package for {dep} could be found for Debian (10) Buster')
+                print(f"No package for {dep} could be found for Debian (10) Buster")
     deb_dependencies.sort()
 
+
 def generate_nfpm_config():
-    with open('templates/ros2-base-packages.yaml', 'r') as f:
+    with open("templates/ros2-base-packages.yaml", "r") as f:
         config = yaml.safe_load(f.read())
-    config['depends'] = deb_dependencies
-    with open('ros2-base-packages.yaml', 'w') as f:
+    config["depends"] = deb_dependencies
+    with open("ros2-base-packages.yaml", "w") as f:
         f.write(yaml.dump(config))
-    
 
 
-
-if __name__ == '__main__':
-    dependencies_for_debian('~/ros2_foxy/install_aarch64')
+if __name__ == "__main__":
+    dependencies_for_debian("./install_aarch64")
     generate_nfpm_config()

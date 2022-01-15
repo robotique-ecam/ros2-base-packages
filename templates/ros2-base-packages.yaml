@@ -1,14 +1,14 @@
 name: "ros2-base-packages"
 arch: "arm64"
 platform: "linux"
-version: "foxy-rc1"
+version: "1.0.0"
 section: "default"
 priority: "extra"
 depends: []
 maintainer: "Ewen BRUN @3wnbr1"
-description: Base ROS2 Foxy buster:aarch64 package inc navigation2 & TEB
+description: Base ROS2 Galactic debian buster aarch64 package inc navigation2 & TEB
 vendor: "Robotique-ECAM"
 license: "GPLv3"
 contents:
 - src: install_aarch64
-  dst: /opt/ros/foxy
+  dst: /opt/ros/galactic
